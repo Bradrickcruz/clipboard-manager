@@ -23,7 +23,7 @@ function App() {
   function handleClipboardChange() {
     const text = clipboard.readText();
     
-    if (clipboardItems.at(-1) !== text) {
+    if (text && clipboardItems.at(-1) !== text) {
       console.log("alterou clipboard",text)
 
       setClipboardItems([...clipboardItems, text]);
@@ -32,8 +32,8 @@ function App() {
   clipboardCallback = debounce(handleClipboardChange, 100)
 
   const handleClearClipboard = () => {
-    clipboard.clear();
     setClipboardItems([]);
+    clipboard.clear();
   };
 
   return (
