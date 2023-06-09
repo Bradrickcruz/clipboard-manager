@@ -5,6 +5,17 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #A6A7AB;
+  background: #232428;
+  margin: 0 15px;
+}
+
+#HeaderTitle {
+  font-size: 1.25rem;
+}
+
+ul {
+  list-style: none;
 }
 
 code {

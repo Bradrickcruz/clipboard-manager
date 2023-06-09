@@ -1,34 +1,48 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useState } from 'react';
+import ClipboardCard from './components/ClipboardCard/index';
 const { clipboard } = window.require('electron');
+const clipboardListener = window.require('clipboard-event');
+clipboardListener.startListening();
+
+let clipboardCallback = () => console.log('Clipboard changed');
+clipboardListener.on('change', () => {
+  clipboardCallback()
+});
+
+function debounce(func, timeout = 300){
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
 
 function App() {
   const [clipboardItems, setClipboardItems] = useState([]);
-  const [clipboardLastItem, setClipboardLastItem] = useState("");
 
-  setInterval(() => {
+  function handleClipboardChange() {
     const text = clipboard.readText();
-    if (text !== clipboardLastItem) {
-      console.log('Texto copiado:', text);
-      setClipboardLastItem(text);
-    }
-  }, 500);
+    
+    if (clipboardItems.at(-1) !== text) {
+      console.log("alterou clipboard",text)
 
-  useEffect(()=>{
-    setClipboardItems((prevItems) => [...prevItems, clipboardLastItem]);
-  },[clipboardLastItem])
+      setClipboardItems([...clipboardItems, text]);
+    }
+  };
+  clipboardCallback = debounce(handleClipboardChange, 100)
 
   const handleClearClipboard = () => {
+    clipboard.clear();
     setClipboardItems([]);
   };
 
   return (
     <div>
-      <h1>Clipboard Manager</h1>
+      <h1 id="HeaderTitle">Clipboard Manager</h1>
       <button onClick={handleClearClipboard}>Limpar Histórico</button>
-      <ul>
+      <ul style={{"list-style":'none'}}>
         {clipboardItems.map((item, index) => (
-          <li key={index}>{item}</li>
+          <ClipboardCard key={index} content={item}/>
         ))}
       </ul>
     </div>
