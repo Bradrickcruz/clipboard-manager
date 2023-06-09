@@ -1,0 +1,12 @@
+.clipboard-card{
+  font-size: 12px;
+  width: 100%;
+  min-height: 4rem;
+  max-height: 4rem;
+  border: 1px solid #657db2;
+  border-radius: 2px;
+  margin: .5rem 0;
+  padding: .25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

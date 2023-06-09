@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import ClipboardCard from './components/ClipboardCard/index';
+import ClipboardList from './components/ClipboardList/index';
 const { clipboard } = window.require('electron');
 const clipboardListener = window.require('clipboard-event');
 clipboardListener.startListening();
 
-let clipboardCallback = () => console.log('Clipboard changed');
-clipboardListener.on('change', () => {
-  clipboardCallback()
-});
+let clipboardCallback = () => console.log('Default Clipboard-event callback');
+clipboardListener.on('change', () => clipboardCallback());
 
 function debounce(func, timeout = 300){
   let timer;
@@ -21,15 +19,15 @@ function App() {
   const [clipboardItems, setClipboardItems] = useState([]);
 
   function handleClipboardChange() {
-    const text = clipboard.readText();
+    let text = clipboard.readText();
     
     if (text && clipboardItems.at(-1) !== text) {
       console.log("alterou clipboard",text)
 
-      setClipboardItems([...clipboardItems, text]);
+      setClipboardItems([text, ...clipboardItems]);
     }
   };
-  clipboardCallback = debounce(handleClipboardChange, 100)
+  clipboardCallback = debounce(handleClipboardChange, 100);
 
   const handleClearClipboard = () => {
     setClipboardItems([]);
@@ -37,15 +35,11 @@ function App() {
   };
 
   return (
-    <div>
+    <>
       <h1 id="HeaderTitle">Clipboard Manager</h1>
-      <button onClick={handleClearClipboard}>Limpar Histórico</button>
-      <ul style={{"list-style":'none'}}>
-        {clipboardItems.map((item, index) => (
-          <ClipboardCard key={index} content={item}/>
-        ))}
-      </ul>
-    </div>
+      <button className="bg-white hover:bg-gray-100 text-gray-800 py-1 px-2 border border-gray-400 rounded shadow" onClick={handleClearClipboard}>Limpar Histórico</button>
+      <ClipboardList items={clipboardItems} />
+    </>
   );
 }
 
