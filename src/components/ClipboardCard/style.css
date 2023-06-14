@@ -3,10 +3,17 @@
   width: 100%;
   min-height: 4rem;
   max-height: 4rem;
-  border: 1px solid #657db2;
+  border: 1px solid #657db266;
+  background: #363636;
+  color: #FFF;
   border-radius: 2px;
   margin: .5rem 0;
-  padding: .25rem;
   overflow: hidden;
+  white-space: nowrap;
+  word-wrap: break-word;
   text-overflow: ellipsis;
+}
+
+.clipboard-card pre {
+  margin: 0.5rem .25rem;
 }
