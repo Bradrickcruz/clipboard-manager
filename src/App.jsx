@@ -11,7 +11,7 @@ function debounce(func, timeout = 300) {
   let timer;
   return (...args) => {
     clearTimeout(timer);
-    timer = setTimeout(() => (func.apply(this, args)), timeout);
+    timer = setTimeout(() => func.apply(this, args), timeout);
   };
 }
 
@@ -37,6 +37,7 @@ export default function App() {
     ) {
       const clipboardItem = {
         id: clipboardIdCounter,
+        type: 'text',
         content: text,
       };
 
@@ -52,10 +53,8 @@ export default function App() {
       if (position > -1) {
         const updatedHistory = [...prevClipboardHistory];
 
-        if (position === 0) {
-          clipboard.writeText(updatedHistory[0].content);
-          updatedHistory.splice(0, 1);
-        } else updatedHistory.splice(position, 1);
+        if (position === 0) updatedHistory.splice(0, 1);
+        else updatedHistory.splice(position, 1);
 
         return updatedHistory;
       }
