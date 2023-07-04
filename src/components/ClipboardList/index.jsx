@@ -10,16 +10,14 @@ export default function ClipboardList({
 }) {
   function handleRemoveItemCallback(id) {
     return () => {
-      console.log('removendo item: ', id);
       removeItemHandler(id);
     };
   }
 
-  function handleAddItemContent(text) {
+  function handleRecopyItemContent(id, text) {
     return () => {
-      console.log('recopy item: ', text);
       clipboard.writeText(text);
-      // addTextToClipboard(text);
+      handleRemoveItemCallback(id)()
     };
   }
 
@@ -30,7 +28,7 @@ export default function ClipboardList({
           key={index}
           content={item.content}
           removeItemHandler={handleRemoveItemCallback(item.id)}
-          recopyHandler={handleAddItemContent(item.content)}
+          recopyHandler={handleRecopyItemContent(item.id, item.content)}
         />
       ))}
     </ul>
