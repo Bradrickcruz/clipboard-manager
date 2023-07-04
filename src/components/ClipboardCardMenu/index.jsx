@@ -12,6 +12,7 @@ export default function ClipboardCardMenu({
           className="block text-black px-4 py-2 w-full text-left hover:bg-gray-100"
           onClick={() => {
             recopyHandler();
+            removeItemHandler();
             handleMenuVisibility(false);
           }}
         >

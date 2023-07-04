@@ -11,9 +11,7 @@ function debounce(func, timeout = 300) {
   let timer;
   return (...args) => {
     clearTimeout(timer);
-    timer = setTimeout(() => {
-      func.apply(this, args);
-    }, timeout);
+    timer = setTimeout(() => (func.apply(this, args)), timeout);
   };
 }
 
@@ -33,7 +31,10 @@ export default function App() {
   clipboardCallback = debounce(handleChangeClipboard, 50);
 
   function addTextToClipboardHistory(text) {
-    if (!!text !== false && (clipboardHistory.length === 0 || clipboardHistory[0].content !== text)) {
+    if (
+      !!text !== false &&
+      (clipboardHistory.length === 0 || clipboardHistory[0].content !== text)
+    ) {
       const clipboardItem = {
         id: clipboardIdCounter,
         content: text,
@@ -45,16 +46,22 @@ export default function App() {
   }
 
   function handleRemoveTextClipboard(id) {
-    const position = clipboardHistory.findIndex((item) => item.id === id);
-    if (position > 0)
-      setClipboardHistory([
-        ...clipboardHistory.slice(0, position),
-        ...clipboardHistory.slice(position + 1),
-      ]);
-    else {
-      setClipboardHistory([...clipboardHistory.slice(1)]);
-      clipboard.writeText(clipboardHistory[0].content);
-    }
+    setClipboardHistory((prevClipboardHistory) => {
+      const position = prevClipboardHistory.findIndex((item) => item.id === id);
+
+      if (position > -1) {
+        const updatedHistory = [...prevClipboardHistory];
+
+        if (position === 0) {
+          clipboard.writeText(updatedHistory[0].content);
+          updatedHistory.splice(0, 1);
+        } else updatedHistory.splice(position, 1);
+
+        return updatedHistory;
+      }
+
+      return prevClipboardHistory;
+    });
   }
 
   function handleRemoveClipboardItem(position) {
