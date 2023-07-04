@@ -1,14 +1,10 @@
-const {
-  BrowserWindow,
-  globalShortcut,
-  Tray,
-  screen,
-} = require('electron');
+const { BrowserWindow, globalShortcut, Tray, screen } = require('electron');
 const isDev = require('electron-is-dev');
 const path = require('path');
 
 function createWindow() {
   function showMainWindowAtMousePosition() {
+    if (mainWindow.isVisible()) return false;
     const { x, y } = screen.getCursorScreenPoint();
     mainWindow.setPosition(x, y);
     mainWindow.show();
@@ -33,20 +29,18 @@ function createWindow() {
 
   mainWindow.loadURL(startUrl);
 
-  const sc_screenFocus = globalShortcut.register('CmdOrCtrl+Alt+V', () => {
-    if (!mainWindow.isVisible()) showMainWindowAtMousePosition(); // Mostra a janela na posição do mouse se estiver oculta
-  });
+  const sc_screenFocus = globalShortcut.register(
+    'Super+Alt+V',
+    showMainWindowAtMousePosition
+  );
 
-  if (!sc_screenFocus) console.log('Erro ao gerar atalho "CmdOrCtrl+Alt+V"');
+  if (!sc_screenFocus) console.log('Erro ao gerar atalho "Super+Alt+V"');
 
   const tray = new Tray(path.join(__dirname, '../tray_icon.png'));
-  // Lidar com o clique no ícone da bandeja
-  tray.on('click', () => {
-    if (!mainWindow.isVisible()) showMainWindowAtMousePosition(); // Mostra a janela na posição do mouse
-  });
+  tray.on('click', showMainWindowAtMousePosition);
 
   mainWindow.on('closed', () => {
-    mainWindow = null
+    mainWindow = null;
   });
 
   mainWindow.on('blur', () => {
