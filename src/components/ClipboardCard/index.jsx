@@ -6,7 +6,7 @@ export default function ClipboardCard({ content, removeItemHandler, recopyHandle
   const [showMenu, setShowMenu] = useState(false);
 
   return (
-    <div className="clipboard-card overflow-hidden relative" onDoubleClick={recopyHandler}>
+    <div className="clipboard-card overflow-hidden relative" title={content} onDoubleClick={recopyHandler}>
       {showMenu && (
         <ClipboardCardMenu
           removeItemHandler={removeItemHandler}
